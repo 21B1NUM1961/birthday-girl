@@ -1,0 +1,1079 @@
+/* =========================================================
+   ROMANTIC BIRTHDAY SURPRISE - STYLESHEET
+   Aesthetic, fluid, responsive & designed for Vercel
+   ========================================================= */
+
+:root {
+  --font-main: 'Comfortaa', 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-script: 'Caveat', cursive, sans-serif;
+  
+  --bg-gradient: radial-gradient(circle at 50% 20%, #2b0e1e 0%, #170712 55%, #0c0209 100%);
+  --card-bg: rgba(255, 255, 255, 0.08);
+  --card-border: rgba(255, 255, 255, 0.16);
+  --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 40px rgba(244, 63, 94, 0.15);
+
+  --rose-primary: #ff4d6d;
+  --rose-glow: #f43f5e;
+  --rose-dark: #881337;
+  --gold-warm: #fde047;
+  --text-main: #fff0f3;
+  --text-muted: #fbcfe8;
+
+  --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background: var(--bg-gradient);
+  color: var(--text-main);
+  font-family: var(--font-main);
+  overflow-x: hidden;
+  position: relative;
+  touch-action: manipulation;
+}
+
+/* Canvas background for falling petals */
+#ambientCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* =========================================================
+   TOP NAVIGATION & CONTROLS
+   ========================================================= */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 50;
+  background: linear-gradient(180deg, rgba(12, 2, 9, 0.8) 0%, rgba(12, 2, 9, 0) 100%);
+  backdrop-filter: blur(4px);
+}
+
+.brand-tag {
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fda4af;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(253, 164, 175, 0.5);
+}
+
+.glass-pill-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: var(--text-main);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition-smooth);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.glass-pill-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(244, 63, 94, 0.3);
+}
+
+.glass-pill-btn.muted {
+  opacity: 0.6;
+}
+
+/* =========================================================
+   MAIN VIEWPORT & STEP TRANSITIONS
+   ========================================================= */
+.app-viewport {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 75px 16px 45px 16px;
+}
+
+.step-screen {
+  position: absolute;
+  width: 100%;
+  max-width: 520px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(30px) scale(0.96);
+  pointer-events: none;
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.7s;
+}
+
+.step-screen.active {
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* Glassmorphism Card Base */
+.card {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 28px;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 32px 24px;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Glow orbs in background of card */
+.glow-orb {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.45;
+}
+.orb-1 {
+  background: #f43f5e;
+  top: -40px;
+  right: -40px;
+}
+.orb-2 {
+  background: #fb7185;
+  bottom: -40px;
+  left: -40px;
+}
+
+/* Badge Ribbon */
+.badge-ribbon {
+  display: inline-block;
+  background: rgba(244, 63, 94, 0.2);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  color: #ffe4e6;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 20px;
+}
+
+/* =========================================================
+   STEP 1: PHOTO & INTRO
+   ========================================================= */
+.photo-frame-wrapper {
+  margin: 10px auto 24px auto;
+  display: flex;
+  justify-content: center;
+}
+
+.photo-frame {
+  position: relative;
+  background: #ffffff;
+  padding: 12px 12px 24px 12px;
+  border-radius: 14px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35), 0 0 25px rgba(244, 63, 94, 0.25);
+  transform: rotate(-2deg);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  max-width: 290px;
+  width: 100%;
+}
+
+.photo-frame:hover {
+  transform: rotate(0deg) scale(1.02);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45), 0 0 35px rgba(244, 63, 94, 0.4);
+}
+
+.frame-pin {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.4rem;
+  z-index: 3;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.photo-container {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fdf2f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.photo-frame:hover .photo-container img {
+  transform: scale(1.04);
+}
+
+.polaroid-caption {
+  margin-top: 10px;
+}
+
+.script-font {
+  font-family: var(--font-script);
+  font-size: 1.6rem;
+  color: #881337;
+  font-weight: 700;
+}
+
+.intro-text-group .main-title {
+  font-size: 1.5rem;
+  line-height: 1.35;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 50%, #fde047 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 26px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.action-btn-wrap {
+  margin-top: 10px;
+}
+
+/* Glowing Primary Button */
+.glow-primary-btn {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 60%, #be123c 100%);
+  color: #ffffff;
+  border: none;
+  outline: none;
+  padding: 14px 34px;
+  border-radius: 999px;
+  font-size: 1.05rem;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 25px rgba(244, 63, 94, 0.45);
+  transition: var(--transition-smooth);
+}
+
+.glow-primary-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 35px rgba(244, 63, 94, 0.65);
+}
+
+.glow-primary-btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.btn-arrow {
+  transition: transform 0.3s ease;
+}
+.glow-primary-btn:hover .btn-arrow {
+  transform: translateX(4px);
+}
+
+.pulse-glow {
+  animation: pulseButton 2.2s infinite ease-in-out;
+}
+
+@keyframes pulseButton {
+  0%, 100% {
+    box-shadow: 0 8px 25px rgba(244, 63, 94, 0.45);
+  }
+  50% {
+    box-shadow: 0 10px 38px rgba(244, 63, 94, 0.85);
+  }
+}
+
+/* =========================================================
+   STEP 2: CAKE & CANDLE BLOWOUT
+   ========================================================= */
+.cake-scene-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.cake-header {
+  margin-bottom: 30px;
+}
+
+.magic-stars {
+  font-size: 1.4rem;
+  letter-spacing: 4px;
+  margin-bottom: 6px;
+  animation: floatStar 3s ease-in-out infinite;
+}
+
+@keyframes floatStar {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.step-title.candle-prompt {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #fff1f2;
+  text-shadow: 0 0 20px rgba(253, 224, 71, 0.5), 0 0 40px rgba(244, 63, 94, 0.4);
+  letter-spacing: 0.5px;
+}
+
+.cake-sub-hint {
+  font-size: 0.95rem;
+  color: #fbcfe8;
+  margin-top: 6px;
+}
+
+/* Interactive Cake Area */
+.cake-interactive {
+  position: relative;
+  width: 290px;
+  height: 270px;
+  margin: 10px auto 25px auto;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cake-interactive:hover {
+  transform: scale(1.03);
+}
+
+.cake-interactive:active {
+  transform: scale(0.98);
+}
+
+/* Ambient glow around cake */
+.cake-light-glow {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(253, 224, 71, 0.28) 0%, rgba(244, 63, 94, 0.15) 50%, transparent 75%);
+  border-radius: 50%;
+  filter: blur(25px);
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+  animation: glowBreathe 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes glowBreathe {
+  0% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.7; }
+  100% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+}
+
+/* CANDLES ROW */
+.candles-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  z-index: 5;
+  margin-bottom: -4px;
+}
+
+.candle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.candle-body {
+  width: 14px;
+  height: 48px;
+  border-radius: 4px;
+  box-shadow: inset 2px 0 4px rgba(255,255,255,0.4), inset -2px 0 4px rgba(0,0,0,0.2), 0 2px 5px rgba(0,0,0,0.25);
+}
+
+.candle-striped-1 {
+  background: repeating-linear-gradient(45deg, #fb7185, #fb7185 6px, #ffffff 6px, #ffffff 12px);
+}
+.candle-striped-2 {
+  background: repeating-linear-gradient(45deg, #fde047, #fde047 6px, #ffffff 6px, #ffffff 12px);
+  height: 54px;
+}
+.candle-striped-3 {
+  background: repeating-linear-gradient(45deg, #67e8f9, #67e8f9 6px, #ffffff 6px, #ffffff 12px);
+}
+
+.wick {
+  width: 2px;
+  height: 9px;
+  background: #3f3f46;
+  border-radius: 1px;
+}
+
+/* FLAMES */
+.flame-wrapper {
+  position: relative;
+  width: 18px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.flame {
+  position: absolute;
+  bottom: 0;
+  width: 16px;
+  height: 26px;
+  background: radial-gradient(ellipse at bottom, #fff7ed 15%, #fde047 45%, #f97316 75%, #ef4444 100%);
+  border-radius: 50% 50% 35% 35% / 60% 60% 40% 40%;
+  box-shadow: 0 0 15px rgba(253, 224, 71, 0.9), 0 -5px 25px rgba(249, 115, 22, 0.6);
+  transform-origin: center bottom;
+  animation: flickerA 0.16s infinite alternate;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.candle-center .flame {
+  animation: flickerB 0.21s infinite alternate;
+  width: 18px;
+  height: 29px;
+}
+
+.candle-right .flame {
+  animation: flickerC 0.18s infinite alternate;
+}
+
+.flame-core {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 12px;
+  background: #ffffff;
+  border-radius: 50%;
+  opacity: 0.85;
+}
+
+/* Candle flame flicker keyframes */
+@keyframes flickerA {
+  0% { transform: scale(1) rotate(-1.5deg) skewX(-1deg); }
+  100% { transform: scale(1.08, 0.95) rotate(2deg) skewX(2deg); }
+}
+@keyframes flickerB {
+  0% { transform: scale(1.05, 0.96) rotate(1.5deg) skewX(1deg); }
+  100% { transform: scale(0.96, 1.05) rotate(-2deg) skewX(-1.5deg); }
+}
+@keyframes flickerC {
+  0% { transform: scale(0.98) rotate(-2deg); }
+  100% { transform: scale(1.06, 1) rotate(1deg); }
+}
+
+/* Smoke puff when blown out */
+.smoke-puff {
+  position: absolute;
+  bottom: 6px;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  filter: blur(2px);
+}
+
+/* Extinguished / Blown Out State */
+.cake-interactive.blown-out .flame {
+  opacity: 0 !important;
+  transform: scale(0) translateY(-10px) !important;
+  animation: none !important;
+}
+
+.cake-interactive.blown-out .cake-light-glow {
+  opacity: 0.1 !important;
+  transition: opacity 1s ease;
+}
+
+.cake-interactive.blown-out .smoke-puff {
+  animation: smokeRise 1.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes smokeRise {
+  0% {
+    opacity: 0.8;
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(-25px) scale(2.2) rotate(25deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-55px) scale(3.5) rotate(-30deg);
+  }
+}
+
+/* CAKE BODY */
+.cake-body-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.cake-tier {
+  position: relative;
+  box-shadow: inset 0 4px 6px rgba(255,255,255,0.3), 0 6px 15px rgba(0,0,0,0.3);
+}
+
+.tier-top {
+  width: 170px;
+  height: 60px;
+  background: linear-gradient(180deg, #fce7f3 0%, #f472b6 100%);
+  border-radius: 14px 14px 8px 8px;
+  z-index: 3;
+}
+
+.tier-bottom {
+  width: 230px;
+  height: 75px;
+  background: linear-gradient(180deg, #ffe4e6 0%, #fb7185 100%);
+  border-radius: 16px 16px 10px 10px;
+  margin-top: -8px;
+  z-index: 2;
+}
+
+/* Frosting drips */
+.frosting-drips {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 22px;
+  background: #ffffff;
+  border-radius: 12px 12px 0 0;
+}
+
+.drip-top::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 12px;
+  background: radial-gradient(circle at 10px 0, #ffffff 10px, transparent 11px);
+  background-size: 20px 20px;
+}
+
+.drip-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 12px;
+  background: radial-gradient(circle at 12px 0, #ffffff 12px, transparent 13px);
+  background-size: 24px 24px;
+}
+
+.berries-row {
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 16px;
+  font-size: 1.25rem;
+  z-index: 4;
+}
+
+.sugar-pearls {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 20px;
+}
+
+.sugar-pearls i {
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #fff, inset -1px -1px 2px rgba(0,0,0,0.2);
+}
+
+.cake-plate {
+  width: 270px;
+  height: 14px;
+  background: linear-gradient(180deg, #e2e8f0 0%, #94a3b8 100%);
+  border-radius: 50%;
+  margin-top: -6px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  z-index: 1;
+}
+
+/* Tap Hint Floating Bubble */
+.tap-hint-bubble {
+  position: absolute;
+  top: 15px;
+  right: -5px;
+  background: #fde047;
+  color: #713f12;
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 5px 10px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  animation: hintBounce 1.8s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes hintBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Instruction box at bottom of cake */
+.cake-footer {
+  margin-top: 15px;
+  width: 100%;
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 12px 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  max-width: 440px;
+}
+
+.notice-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.instruction-text {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #fed7aa;
+  font-weight: 600;
+}
+
+/* =========================================================
+   STEP 3: ANIMATED MOVING BLOOMING ROSE & CELEBRATION
+   ========================================================= */
+.celebration-card {
+  padding: 34px 20px 28px 20px;
+}
+
+.sparkle-badge {
+  display: inline-block;
+  background: rgba(253, 224, 71, 0.15);
+  border: 1px solid rgba(253, 224, 71, 0.4);
+  color: #fde047;
+  padding: 5px 16px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.celebration-title {
+  font-size: 1.85rem;
+  line-height: 1.25;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.glow-text {
+  color: #ffffff;
+  text-shadow: 0 0 15px rgba(255, 77, 109, 0.8),
+               0 0 30px rgba(244, 63, 94, 0.5),
+               0 0 50px rgba(244, 63, 94, 0.3);
+}
+
+.celebration-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+/* ROSE STAGE */
+.rose-stage {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  height: 320px;
+  margin: 15px auto 10px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.rose-aura {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(244, 63, 94, 0.35) 0%, rgba(225, 29, 72, 0.12) 50%, transparent 75%);
+  filter: blur(35px);
+  pointer-events: none;
+  animation: roseAuraPulse 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes roseAuraPulse {
+  0% { transform: scale(0.9); opacity: 0.6; }
+  100% { transform: scale(1.15); opacity: 1; }
+}
+
+.moving-rose-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.blooming-rose-svg {
+  width: 100%;
+  height: 100%;
+  max-height: 320px;
+  overflow: visible;
+  filter: drop-shadow(0 12px 25px rgba(0, 0, 0, 0.4));
+}
+
+/* NATURAL SWAYING OF THE PLANT (Stem + Leaves + Blossom) */
+.swaying-plant {
+  transform-origin: 160px 400px;
+  animation: plantSway 4.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+}
+
+@keyframes plantSway {
+  0% {
+    transform: rotate(-3.5deg);
+  }
+  50% {
+    transform: rotate(0.8deg);
+  }
+  100% {
+    transform: rotate(4deg);
+  }
+}
+
+/* LEAVES FLUTTER */
+.leaf-left {
+  transform-origin: 158px 270px;
+  animation: leafFlutterLeft 4s ease-in-out infinite alternate;
+}
+
+.leaf-right {
+  transform-origin: 162px 238px;
+  animation: leafFlutterRight 3.6s ease-in-out infinite alternate;
+}
+
+@keyframes leafFlutterLeft {
+  0% { transform: rotate(0deg) scale(1); }
+  100% { transform: rotate(-5deg) scale(1.04); }
+}
+
+@keyframes leafFlutterRight {
+  0% { transform: rotate(0deg) scale(1); }
+  100% { transform: rotate(6deg) scale(1.03); }
+}
+
+/* BLOOMING ROSE PETALS ANIMATION */
+.rose-blossom {
+  transform-origin: 0px 0px;
+  animation: blossomBreath 3.2s ease-in-out infinite alternate;
+}
+
+@keyframes blossomBreath {
+  0% {
+    transform: scale(0.97) rotate(-1deg);
+  }
+  100% {
+    transform: scale(1.03) rotate(1.5deg);
+  }
+}
+
+/* Petals Initial Bloom Opening on Step 3 Entry */
+.step-screen.active .petal-layer.layer-1 {
+  animation: bloomLayer1 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.step-screen.active .petal-layer.layer-2 {
+  animation: bloomLayer2 1.6s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.step-screen.active .petal-layer.layer-3 {
+  animation: bloomLayer3 1.8s 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.step-screen.active .petal-layer.layer-bud {
+  animation: bloomBud 1.5s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes bloomLayer1 {
+  0% { transform: scale(0.2) rotate(-25deg); opacity: 0.2; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes bloomLayer2 {
+  0% { transform: scale(0.3) rotate(20deg); opacity: 0.3; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes bloomLayer3 {
+  0% { transform: scale(0.4) rotate(-15deg); opacity: 0.4; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes bloomBud {
+  0% { transform: scale(0.6); }
+  100% { transform: scale(1); }
+}
+
+/* Touch sparkle zone on Rose */
+.interactive-sparkles-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* LOVE LETTER CARD */
+.love-letter-box {
+  margin: 10px 0 22px 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 20px;
+  text-align: left;
+  box-shadow: inset 0 2px 8px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+}
+
+.letter-header {
+  margin-bottom: 10px;
+}
+
+.envelope-stamp {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #fda4af;
+  background: rgba(244, 63, 94, 0.2);
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.letter-paragraph {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: #ffe4e6;
+  margin-bottom: 10px;
+}
+
+.letter-paragraph.highlight-msg {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.letter-signature {
+  text-align: right;
+  font-family: var(--font-script);
+  font-size: 1.35rem;
+  color: #fbcfe8;
+  margin-top: 8px;
+}
+
+/* FINAL ACTIONS */
+.final-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* Floating particle created on tap */
+.burst-heart {
+  position: fixed;
+  font-size: 1.6rem;
+  pointer-events: none;
+  z-index: 999;
+  animation: floatBurst 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes floatBurst {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.6) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx)), calc(-50% - 80px)) scale(1.4) rotate(var(--rot));
+  }
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+.bottom-footer {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 10px 0 20px 0;
+  font-size: 0.78rem;
+  color: rgba(253, 164, 175, 0.45);
+  letter-spacing: 0.5px;
+}
+
+/* =========================================================
+   RESPONSIVE OPTIMIZATIONS (Smartphones & Tablets)
+   ========================================================= */
+@media (max-width: 480px) {
+  .top-nav {
+    padding: 0 14px;
+    height: 52px;
+  }
+  
+  .brand-tag {
+    font-size: 0.75rem;
+  }
+
+  .glass-pill-btn {
+    padding: 6px 12px;
+    font-size: 0.76rem;
+  }
+
+  .app-viewport {
+    padding: 60px 12px 35px 12px;
+  }
+
+  .card {
+    padding: 24px 16px;
+    border-radius: 22px;
+  }
+
+  .photo-frame {
+    max-width: 240px;
+    padding: 10px 10px 20px 10px;
+  }
+
+  .intro-text-group .main-title {
+    font-size: 1.3rem;
+  }
+
+  .subtitle {
+    font-size: 0.88rem;
+  }
+
+  .step-title.candle-prompt {
+    font-size: 1.55rem;
+  }
+
+  .cake-interactive {
+    width: 250px;
+    height: 240px;
+  }
+
+  .tier-top {
+    width: 145px;
+    height: 52px;
+  }
+
+  .tier-bottom {
+    width: 200px;
+    height: 65px;
+  }
+
+  .cake-plate {
+    width: 235px;
+  }
+
+  .instruction-text {
+    font-size: 0.82rem;
+  }
+
+  .celebration-title {
+    font-size: 1.55rem;
+  }
+
+  .rose-stage {
+    max-width: 260px;
+    height: 280px;
+  }
+
+  .love-letter-box {
+    padding: 16px;
+  }
+
+  .letter-paragraph {
+    font-size: 0.86rem;
+  }
+}
