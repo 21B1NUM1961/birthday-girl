@@ -1,16 +1,16 @@
 /* =========================================================
    ROMANTIC BIRTHDAY SURPRISE - STYLESHEET
-   Aesthetic, fluid, responsive & designed for Vercel
+   Aesthetic, fluid, mobile-first & responsive for Vercel
    ========================================================= */
 
 :root {
   --font-main: 'Comfortaa', 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-script: 'Caveat', cursive, sans-serif;
   
-  --bg-gradient: radial-gradient(circle at 50% 20%, #2b0e1e 0%, #170712 55%, #0c0209 100%);
+  --bg-gradient: radial-gradient(circle at 50% 15%, #2d0e20 0%, #160713 55%, #0a0208 100%);
   --card-bg: rgba(255, 255, 255, 0.08);
   --card-border: rgba(255, 255, 255, 0.16);
-  --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 40px rgba(244, 63, 94, 0.15);
+  --card-shadow: 0 16px 45px rgba(0, 0, 0, 0.5), 0 0 35px rgba(244, 63, 94, 0.18);
 
   --rose-primary: #ff4d6d;
   --rose-glow: #f43f5e;
@@ -19,7 +19,7 @@
   --text-main: #fff0f3;
   --text-muted: #fbcfe8;
 
-  --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 *, *::before, *::after {
@@ -31,7 +31,8 @@
 
 html, body {
   width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg-gradient);
   color: var(--text-main);
   font-family: var(--font-main);
@@ -40,7 +41,7 @@ html, body {
   touch-action: manipulation;
 }
 
-/* Canvas background for falling petals */
+/* Background canvas for falling rose petals */
 #ambientCanvas {
   position: fixed;
   top: 0;
@@ -52,26 +53,27 @@ html, body {
 }
 
 /* =========================================================
-   TOP NAVIGATION & CONTROLS
+   TOP NAVIGATION & SAFE-AREA SUPPORT
    ========================================================= */
 .top-nav {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: calc(52px + env(safe-area-inset-top, 0px));
+  padding: env(safe-area-inset-top, 0px) 16px 0 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
   z-index: 50;
-  background: linear-gradient(180deg, rgba(12, 2, 9, 0.8) 0%, rgba(12, 2, 9, 0) 100%);
-  backdrop-filter: blur(4px);
+  background: linear-gradient(180deg, rgba(10, 2, 8, 0.88) 0%, rgba(10, 2, 8, 0) 100%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .brand-tag {
-  font-size: 0.85rem;
-  letter-spacing: 2px;
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   color: #fda4af;
   font-weight: 700;
@@ -82,55 +84,57 @@ html, body {
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.22);
   color: var(--text-main);
-  padding: 8px 16px;
+  padding: 6px 14px;
   border-radius: 999px;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-family: inherit;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   transition: var(--transition-smooth);
   backdrop-filter: blur(8px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  user-select: none;
 }
 
-.glass-pill-btn:hover {
-  background: rgba(255, 255, 255, 0.22);
-  border-color: rgba(255, 255, 255, 0.4);
+.glass-pill-btn:hover, .glass-pill-btn:active {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.38);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(244, 63, 94, 0.3);
 }
 
 .glass-pill-btn.muted {
-  opacity: 0.6;
+  opacity: 0.65;
 }
 
 /* =========================================================
-   MAIN VIEWPORT & STEP TRANSITIONS
+   MAIN VIEWPORT & STEP SCREENS
    ========================================================= */
 .app-viewport {
   position: relative;
   z-index: 10;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 75px 16px 45px 16px;
+  padding: calc(56px + env(safe-area-inset-top, 0px)) 14px calc(24px + env(safe-area-inset-bottom, 0px)) 14px;
 }
 
 .step-screen {
   position: absolute;
   width: 100%;
-  max-width: 520px;
+  max-width: 460px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(30px) scale(0.96);
+  transform: translateY(24px) scale(0.97);
   pointer-events: none;
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              visibility 0.7s;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.6s;
 }
 
 .step-screen.active {
@@ -141,61 +145,59 @@ html, body {
   pointer-events: auto;
 }
 
-/* Glassmorphism Card Base */
+/* Glassmorphism Card */
 .card {
   position: relative;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 28px;
+  border-radius: 24px;
   box-shadow: var(--card-shadow);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  padding: 32px 24px;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  padding: 24px 18px;
   text-align: center;
   overflow: hidden;
 }
 
-/* Glow orbs in background of card */
 .glow-orb {
   position: absolute;
-  width: 180px;
-  height: 180px;
+  width: 160px;
+  height: 160px;
   border-radius: 50%;
-  filter: blur(60px);
+  filter: blur(55px);
   pointer-events: none;
   z-index: -1;
   opacity: 0.45;
 }
 .orb-1 {
   background: #f43f5e;
-  top: -40px;
-  right: -40px;
+  top: -30px;
+  right: -30px;
 }
 .orb-2 {
   background: #fb7185;
-  bottom: -40px;
-  left: -40px;
+  bottom: -30px;
+  left: -30px;
 }
 
-/* Badge Ribbon */
 .badge-ribbon {
   display: inline-block;
-  background: rgba(244, 63, 94, 0.2);
-  border: 1px solid rgba(244, 63, 94, 0.35);
+  background: rgba(244, 63, 94, 0.22);
+  border: 1px solid rgba(244, 63, 94, 0.4);
   color: #ffe4e6;
-  padding: 6px 14px;
+  padding: 5px 14px;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.5px;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 /* =========================================================
    STEP 1: PHOTO & INTRO
    ========================================================= */
 .photo-frame-wrapper {
-  margin: 10px auto 24px auto;
+  margin: 6px auto 18px auto;
   display: flex;
   justify-content: center;
 }
@@ -203,28 +205,26 @@ html, body {
 .photo-frame {
   position: relative;
   background: #ffffff;
-  padding: 12px 12px 24px 12px;
-  border-radius: 14px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35), 0 0 25px rgba(244, 63, 94, 0.25);
-  transform: rotate(-2deg);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-  max-width: 290px;
+  padding: 10px 10px 18px 10px;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 25px rgba(244, 63, 94, 0.25);
+  transform: rotate(-1.5deg);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  max-width: 230px;
   width: 100%;
 }
 
-.photo-frame:hover {
+.photo-frame:hover, .photo-frame:active {
   transform: rotate(0deg) scale(1.02);
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45), 0 0 35px rgba(244, 63, 94, 0.4);
 }
 
 .frame-pin {
   position: absolute;
-  top: -10px;
+  top: -9px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1.4rem;
+  font-size: 1.25rem;
   z-index: 3;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
 .photo-container {
@@ -243,28 +243,23 @@ html, body {
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.5s ease;
-}
-
-.photo-frame:hover .photo-container img {
-  transform: scale(1.04);
 }
 
 .polaroid-caption {
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .script-font {
   font-family: var(--font-script);
-  font-size: 1.6rem;
+  font-size: 1.45rem;
   color: #881337;
   font-weight: 700;
 }
 
 .intro-text-group .main-title {
-  font-size: 1.5rem;
+  font-size: 1.32rem;
   line-height: 1.35;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   font-weight: 700;
 }
 
@@ -276,17 +271,13 @@ html, body {
 }
 
 .subtitle {
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   color: var(--text-muted);
-  line-height: 1.5;
-  margin-bottom: 26px;
-  max-width: 400px;
+  line-height: 1.45;
+  margin-bottom: 20px;
+  max-width: 380px;
   margin-left: auto;
   margin-right: auto;
-}
-
-.action-btn-wrap {
-  margin-top: 10px;
 }
 
 /* Glowing Primary Button */
@@ -295,33 +286,30 @@ html, body {
   color: #ffffff;
   border: none;
   outline: none;
-  padding: 14px 34px;
+  padding: 13px 30px;
   border-radius: 999px;
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-family: inherit;
   font-weight: 700;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  box-shadow: 0 8px 25px rgba(244, 63, 94, 0.45);
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(244, 63, 94, 0.45);
   transition: var(--transition-smooth);
+  user-select: none;
 }
 
-.glow-primary-btn:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 12px 35px rgba(244, 63, 94, 0.65);
-}
-
-.glow-primary-btn:active {
-  transform: translateY(1px) scale(0.98);
+.glow-primary-btn:hover, .glow-primary-btn:active {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 32px rgba(244, 63, 94, 0.7);
 }
 
 .btn-arrow {
   transition: transform 0.3s ease;
 }
 .glow-primary-btn:hover .btn-arrow {
-  transform: translateX(4px);
+  transform: translateX(3px);
 }
 
 .pulse-glow {
@@ -330,10 +318,10 @@ html, body {
 
 @keyframes pulseButton {
   0%, 100% {
-    box-shadow: 0 8px 25px rgba(244, 63, 94, 0.45);
+    box-shadow: 0 8px 22px rgba(244, 63, 94, 0.45);
   }
   50% {
-    box-shadow: 0 10px 38px rgba(244, 63, 94, 0.85);
+    box-shadow: 0 10px 35px rgba(244, 63, 94, 0.85);
   }
 }
 
@@ -345,69 +333,59 @@ html, body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 20px 0;
+  padding: 10px 0;
+  width: 100%;
 }
 
 .cake-header {
-  margin-bottom: 30px;
+  margin-bottom: 16px;
 }
 
 .magic-stars {
-  font-size: 1.4rem;
-  letter-spacing: 4px;
-  margin-bottom: 6px;
-  animation: floatStar 3s ease-in-out infinite;
-}
-
-@keyframes floatStar {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  font-size: 1.25rem;
+  letter-spacing: 3px;
+  margin-bottom: 4px;
 }
 
 .step-title.candle-prompt {
-  font-size: 1.85rem;
+  font-size: 1.65rem;
   font-weight: 800;
   color: #fff1f2;
-  text-shadow: 0 0 20px rgba(253, 224, 71, 0.5), 0 0 40px rgba(244, 63, 94, 0.4);
-  letter-spacing: 0.5px;
+  text-shadow: 0 0 18px rgba(253, 224, 71, 0.5), 0 0 35px rgba(244, 63, 94, 0.4);
 }
 
 .cake-sub-hint {
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   color: #fbcfe8;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
-/* Interactive Cake Area */
+/* Cake Interactive Area */
 .cake-interactive {
   position: relative;
-  width: 290px;
-  height: 270px;
-  margin: 10px auto 25px auto;
+  width: 250px;
+  height: 235px;
+  margin: 8px auto 20px auto;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  user-select: none;
+  transition: transform 0.25s ease;
 }
 
-.cake-interactive:hover {
-  transform: scale(1.03);
+.cake-interactive:hover, .cake-interactive:active {
+  transform: scale(1.02);
 }
 
-.cake-interactive:active {
-  transform: scale(0.98);
-}
-
-/* Ambient glow around cake */
 .cake-light-glow {
   position: absolute;
   top: 15%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 220px;
-  height: 220px;
+  width: 200px;
+  height: 200px;
   background: radial-gradient(circle, rgba(253, 224, 71, 0.28) 0%, rgba(244, 63, 94, 0.15) 50%, transparent 75%);
   border-radius: 50%;
   filter: blur(25px);
@@ -425,9 +403,9 @@ html, body {
 .candles-row {
   display: flex;
   justify-content: center;
-  gap: 24px;
+  gap: 20px;
   z-index: 5;
-  margin-bottom: -4px;
+  margin-bottom: -3px;
 }
 
 .candle {
@@ -438,26 +416,26 @@ html, body {
 }
 
 .candle-body {
-  width: 14px;
-  height: 48px;
-  border-radius: 4px;
-  box-shadow: inset 2px 0 4px rgba(255,255,255,0.4), inset -2px 0 4px rgba(0,0,0,0.2), 0 2px 5px rgba(0,0,0,0.25);
+  width: 12px;
+  height: 44px;
+  border-radius: 3px;
+  box-shadow: inset 1px 0 3px rgba(255,255,255,0.4), inset -1px 0 3px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.25);
 }
 
 .candle-striped-1 {
-  background: repeating-linear-gradient(45deg, #fb7185, #fb7185 6px, #ffffff 6px, #ffffff 12px);
+  background: repeating-linear-gradient(45deg, #fb7185, #fb7185 5px, #ffffff 5px, #ffffff 10px);
 }
 .candle-striped-2 {
-  background: repeating-linear-gradient(45deg, #fde047, #fde047 6px, #ffffff 6px, #ffffff 12px);
-  height: 54px;
+  background: repeating-linear-gradient(45deg, #fde047, #fde047 5px, #ffffff 5px, #ffffff 10px);
+  height: 48px;
 }
 .candle-striped-3 {
-  background: repeating-linear-gradient(45deg, #67e8f9, #67e8f9 6px, #ffffff 6px, #ffffff 12px);
+  background: repeating-linear-gradient(45deg, #67e8f9, #67e8f9 5px, #ffffff 5px, #ffffff 10px);
 }
 
 .wick {
   width: 2px;
-  height: 9px;
+  height: 8px;
   background: #3f3f46;
   border-radius: 1px;
 }
@@ -465,8 +443,8 @@ html, body {
 /* FLAMES */
 .flame-wrapper {
   position: relative;
-  width: 18px;
-  height: 28px;
+  width: 16px;
+  height: 25px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -475,20 +453,20 @@ html, body {
 .flame {
   position: absolute;
   bottom: 0;
-  width: 16px;
-  height: 26px;
+  width: 14px;
+  height: 24px;
   background: radial-gradient(ellipse at bottom, #fff7ed 15%, #fde047 45%, #f97316 75%, #ef4444 100%);
   border-radius: 50% 50% 35% 35% / 60% 60% 40% 40%;
-  box-shadow: 0 0 15px rgba(253, 224, 71, 0.9), 0 -5px 25px rgba(249, 115, 22, 0.6);
+  box-shadow: 0 0 14px rgba(253, 224, 71, 0.9), 0 -4px 22px rgba(249, 115, 22, 0.6);
   transform-origin: center bottom;
   animation: flickerA 0.16s infinite alternate;
-  transition: transform 0.4s ease, opacity 0.4s ease;
+  transition: transform 0.35s ease, opacity 0.35s ease;
 }
 
 .candle-center .flame {
   animation: flickerB 0.21s infinite alternate;
-  width: 18px;
-  height: 29px;
+  width: 16px;
+  height: 26px;
 }
 
 .candle-right .flame {
@@ -500,33 +478,32 @@ html, body {
   bottom: 2px;
   left: 50%;
   transform: translateX(-50%);
-  width: 6px;
-  height: 12px;
+  width: 5px;
+  height: 10px;
   background: #ffffff;
   border-radius: 50%;
   opacity: 0.85;
 }
 
-/* Candle flame flicker keyframes */
 @keyframes flickerA {
-  0% { transform: scale(1) rotate(-1.5deg) skewX(-1deg); }
-  100% { transform: scale(1.08, 0.95) rotate(2deg) skewX(2deg); }
+  0% { transform: scale(1) rotate(-1.5deg); }
+  100% { transform: scale(1.08, 0.95) rotate(2deg); }
 }
 @keyframes flickerB {
-  0% { transform: scale(1.05, 0.96) rotate(1.5deg) skewX(1deg); }
-  100% { transform: scale(0.96, 1.05) rotate(-2deg) skewX(-1.5deg); }
+  0% { transform: scale(1.05, 0.96) rotate(1.5deg); }
+  100% { transform: scale(0.96, 1.05) rotate(-2deg); }
 }
 @keyframes flickerC {
   0% { transform: scale(0.98) rotate(-2deg); }
   100% { transform: scale(1.06, 1) rotate(1deg); }
 }
 
-/* Smoke puff when blown out */
+/* Smoke puff */
 .smoke-puff {
   position: absolute;
-  bottom: 6px;
-  width: 10px;
-  height: 10px;
+  bottom: 4px;
+  width: 8px;
+  height: 8px;
   background: rgba(255, 255, 255, 0.7);
   border-radius: 50%;
   opacity: 0;
@@ -534,16 +511,14 @@ html, body {
   filter: blur(2px);
 }
 
-/* Extinguished / Blown Out State */
 .cake-interactive.blown-out .flame {
   opacity: 0 !important;
-  transform: scale(0) translateY(-10px) !important;
+  transform: scale(0) translateY(-8px) !important;
   animation: none !important;
 }
 
 .cake-interactive.blown-out .cake-light-glow {
   opacity: 0.1 !important;
-  transition: opacity 1s ease;
 }
 
 .cake-interactive.blown-out .smoke-puff {
@@ -551,21 +526,12 @@ html, body {
 }
 
 @keyframes smokeRise {
-  0% {
-    opacity: 0.8;
-    transform: translateY(0) scale(1) rotate(0deg);
-  }
-  50% {
-    opacity: 0.5;
-    transform: translateY(-25px) scale(2.2) rotate(25deg);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-55px) scale(3.5) rotate(-30deg);
-  }
+  0% { opacity: 0.8; transform: translateY(0) scale(1) rotate(0deg); }
+  50% { opacity: 0.5; transform: translateY(-22px) scale(2.2) rotate(25deg); }
+  100% { opacity: 0; transform: translateY(-50px) scale(3.5) rotate(-30deg); }
 }
 
-/* CAKE BODY */
+/* CAKE TIERS */
 .cake-body-wrapper {
   display: flex;
   flex-direction: column;
@@ -575,156 +541,153 @@ html, body {
 
 .cake-tier {
   position: relative;
-  box-shadow: inset 0 4px 6px rgba(255,255,255,0.3), 0 6px 15px rgba(0,0,0,0.3);
+  box-shadow: inset 0 3px 5px rgba(255,255,255,0.3), 0 5px 14px rgba(0,0,0,0.3);
 }
 
 .tier-top {
-  width: 170px;
-  height: 60px;
+  width: 145px;
+  height: 52px;
   background: linear-gradient(180deg, #fce7f3 0%, #f472b6 100%);
-  border-radius: 14px 14px 8px 8px;
+  border-radius: 12px 12px 6px 6px;
   z-index: 3;
 }
 
 .tier-bottom {
-  width: 230px;
-  height: 75px;
+  width: 200px;
+  height: 65px;
   background: linear-gradient(180deg, #ffe4e6 0%, #fb7185 100%);
-  border-radius: 16px 16px 10px 10px;
-  margin-top: -8px;
+  border-radius: 14px 14px 8px 8px;
+  margin-top: -6px;
   z-index: 2;
 }
 
-/* Frosting drips */
 .frosting-drips {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 22px;
+  height: 18px;
   background: #ffffff;
-  border-radius: 12px 12px 0 0;
+  border-radius: 10px 10px 0 0;
 }
 
 .drip-top::after {
   content: '';
   position: absolute;
-  bottom: -10px;
+  bottom: -8px;
   left: 0;
   width: 100%;
-  height: 12px;
-  background: radial-gradient(circle at 10px 0, #ffffff 10px, transparent 11px);
-  background-size: 20px 20px;
+  height: 10px;
+  background: radial-gradient(circle at 9px 0, #ffffff 9px, transparent 10px);
+  background-size: 18px 18px;
 }
 
 .drip-bottom::after {
   content: '';
   position: absolute;
-  bottom: -10px;
+  bottom: -8px;
   left: 0;
   width: 100%;
-  height: 12px;
-  background: radial-gradient(circle at 12px 0, #ffffff 12px, transparent 13px);
-  background-size: 24px 24px;
+  height: 10px;
+  background: radial-gradient(circle at 11px 0, #ffffff 11px, transparent 12px);
+  background-size: 22px 22px;
 }
 
 .berries-row {
   position: absolute;
-  top: -12px;
+  top: -10px;
   left: 0;
   right: 0;
   display: flex;
   justify-content: space-around;
-  padding: 0 16px;
-  font-size: 1.25rem;
+  padding: 0 14px;
+  font-size: 1.15rem;
   z-index: 4;
 }
 
 .sugar-pearls {
   position: absolute;
-  bottom: 12px;
+  bottom: 10px;
   left: 0;
   right: 0;
   display: flex;
   justify-content: space-around;
-  padding: 0 20px;
+  padding: 0 16px;
 }
 
 .sugar-pearls i {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   background: #ffffff;
   border-radius: 50%;
-  box-shadow: 0 0 6px #fff, inset -1px -1px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 0 5px #fff;
 }
 
 .cake-plate {
-  width: 270px;
-  height: 14px;
+  width: 235px;
+  height: 12px;
   background: linear-gradient(180deg, #e2e8f0 0%, #94a3b8 100%);
   border-radius: 50%;
-  margin-top: -6px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  margin-top: -5px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.5);
   z-index: 1;
 }
 
-/* Tap Hint Floating Bubble */
 .tap-hint-bubble {
   position: absolute;
-  top: 15px;
+  top: 10px;
   right: -5px;
   background: #fde047;
   color: #713f12;
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 800;
-  padding: 5px 10px;
+  padding: 4px 9px;
   border-radius: 999px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.25);
   animation: hintBounce 1.8s infinite ease-in-out;
   pointer-events: none;
 }
 
 @keyframes hintBounce {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-6px); }
 }
 
-/* Instruction box at bottom of cake */
 .cake-footer {
-  margin-top: 15px;
+  margin-top: 10px;
   width: 100%;
 }
 
 .glass-pill {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  padding: 12px 18px;
+  border-radius: 18px;
+  padding: 10px 16px;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   backdrop-filter: blur(10px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-  max-width: 440px;
+  -webkit-backdrop-filter: blur(10px);
+  max-width: 420px;
 }
 
 .notice-icon {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   flex-shrink: 0;
 }
 
 .instruction-text {
-  font-size: 0.88rem;
-  line-height: 1.45;
+  font-size: 0.85rem;
+  line-height: 1.4;
   color: #fed7aa;
   font-weight: 600;
 }
 
 /* =========================================================
-   STEP 3: ANIMATED MOVING BLOOMING ROSE & CELEBRATION
+   STEP 3: MOVING ROSE & CELEBRATION (PERMANENTLY ATTACHED)
    ========================================================= */
 .celebration-card {
-  padding: 34px 20px 28px 20px;
+  padding: 24px 16px 20px 16px;
 }
 
 .sparkle-badge {
@@ -732,30 +695,29 @@ html, body {
   background: rgba(253, 224, 71, 0.15);
   border: 1px solid rgba(253, 224, 71, 0.4);
   color: #fde047;
-  padding: 5px 16px;
+  padding: 4px 14px;
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   font-weight: 700;
-  letter-spacing: 1px;
-  margin-bottom: 12px;
+  letter-spacing: 0.8px;
+  margin-bottom: 8px;
 }
 
 .celebration-title {
-  font-size: 1.85rem;
+  font-size: 1.65rem;
   line-height: 1.25;
   font-weight: 800;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .glow-text {
   color: #ffffff;
-  text-shadow: 0 0 15px rgba(255, 77, 109, 0.8),
-               0 0 30px rgba(244, 63, 94, 0.5),
-               0 0 50px rgba(244, 63, 94, 0.3);
+  text-shadow: 0 0 14px rgba(255, 77, 109, 0.8),
+               0 0 28px rgba(244, 63, 94, 0.5);
 }
 
 .celebration-subtitle {
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   color: var(--text-muted);
 }
 
@@ -763,22 +725,23 @@ html, body {
 .rose-stage {
   position: relative;
   width: 100%;
-  max-width: 300px;
-  height: 320px;
-  margin: 15px auto 10px auto;
+  max-width: 270px;
+  height: 270px;
+  margin: 10px auto 6px auto;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  user-select: none;
 }
 
 .rose-aura {
   position: absolute;
-  width: 220px;
-  height: 220px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(244, 63, 94, 0.35) 0%, rgba(225, 29, 72, 0.12) 50%, transparent 75%);
-  filter: blur(35px);
+  filter: blur(30px);
   pointer-events: none;
   animation: roseAuraPulse 3.5s ease-in-out infinite alternate;
 }
@@ -799,103 +762,103 @@ html, body {
 .blooming-rose-svg {
   width: 100%;
   height: 100%;
-  max-height: 320px;
+  max-height: 270px;
   overflow: visible;
-  filter: drop-shadow(0 12px 25px rgba(0, 0, 0, 0.4));
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.45));
 }
 
-/* NATURAL SWAYING OF THE PLANT (Stem + Leaves + Blossom) */
+/* SWAYING AS ONE LIVING PLANT (Stem + Leaves + Calyx + Rose) */
 .swaying-plant {
-  transform-origin: 160px 400px;
-  animation: plantSway 4.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+  transform-origin: 160px 380px;
+  animation: plantSway 4.5s ease-in-out infinite alternate;
 }
 
 @keyframes plantSway {
   0% {
-    transform: rotate(-3.5deg);
-  }
-  50% {
-    transform: rotate(0.8deg);
+    transform: rotate(-3deg);
   }
   100% {
-    transform: rotate(4deg);
+    transform: rotate(3deg);
   }
 }
 
 /* LEAVES FLUTTER */
 .leaf-left {
-  transform-origin: 158px 270px;
-  animation: leafFlutterLeft 4s ease-in-out infinite alternate;
+  transform-origin: 155px 260px;
+  animation: leafFlutterLeft 3.6s ease-in-out infinite alternate;
 }
 
 .leaf-right {
-  transform-origin: 162px 238px;
-  animation: leafFlutterRight 3.6s ease-in-out infinite alternate;
+  transform-origin: 162px 220px;
+  animation: leafFlutterRight 3.2s ease-in-out infinite alternate;
 }
 
 @keyframes leafFlutterLeft {
-  0% { transform: rotate(0deg) scale(1); }
-  100% { transform: rotate(-5deg) scale(1.04); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-5deg); }
 }
 
 @keyframes leafFlutterRight {
-  0% { transform: rotate(0deg) scale(1); }
-  100% { transform: rotate(6deg) scale(1.03); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(5deg); }
 }
 
-/* BLOOMING ROSE PETALS ANIMATION */
+/* ROSE BLOSSOM BREATHING (Centered at 160px 120px, firmly attached to calyx) */
 .rose-blossom {
-  transform-origin: 0px 0px;
+  transform-origin: 160px 120px;
   animation: blossomBreath 3.2s ease-in-out infinite alternate;
 }
 
 @keyframes blossomBreath {
   0% {
-    transform: scale(0.97) rotate(-1deg);
+    transform: scale(0.97) rotate(-0.8deg);
   }
   100% {
-    transform: scale(1.03) rotate(1.5deg);
+    transform: scale(1.03) rotate(0.8deg);
   }
 }
 
-/* Petals Initial Bloom Opening on Step 3 Entry */
+/* Initial blooming open effect on step 3 entry */
 .step-screen.active .petal-layer.layer-1 {
-  animation: bloomLayer1 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform-origin: 160px 120px;
+  animation: bloomLayer1 1.2s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
 }
 
 .step-screen.active .petal-layer.layer-2 {
-  animation: bloomLayer2 1.6s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform-origin: 160px 120px;
+  animation: bloomLayer2 1.4s 0.15s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
 }
 
 .step-screen.active .petal-layer.layer-3 {
-  animation: bloomLayer3 1.8s 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform-origin: 160px 120px;
+  animation: bloomLayer3 1.5s 0.25s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
 }
 
 .step-screen.active .petal-layer.layer-bud {
-  animation: bloomBud 1.5s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform-origin: 160px 100px;
+  animation: bloomBud 1.3s 0.1s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
 }
 
 @keyframes bloomLayer1 {
-  0% { transform: scale(0.2) rotate(-25deg); opacity: 0.2; }
-  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  0% { transform: scale(0.4); opacity: 0.3; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 @keyframes bloomLayer2 {
-  0% { transform: scale(0.3) rotate(20deg); opacity: 0.3; }
-  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  0% { transform: scale(0.5); opacity: 0.4; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 @keyframes bloomLayer3 {
-  0% { transform: scale(0.4) rotate(-15deg); opacity: 0.4; }
-  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  0% { transform: scale(0.6); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 @keyframes bloomBud {
-  0% { transform: scale(0.6); }
+  0% { transform: scale(0.7); }
   100% { transform: scale(1); }
 }
 
-/* Touch sparkle zone on Rose */
 .interactive-sparkles-wrap {
   position: absolute;
   top: 0;
@@ -903,27 +866,26 @@ html, body {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  overflow: visible;
 }
 
 /* LOVE LETTER CARD */
 .love-letter-box {
-  margin: 10px 0 22px 0;
+  margin: 10px 0 18px 0;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 20px;
-  padding: 20px;
+  border-radius: 18px;
+  padding: 16px;
   text-align: left;
-  box-shadow: inset 0 2px 8px rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .letter-header {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .envelope-stamp {
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   font-weight: 700;
   color: #fda4af;
   background: rgba(244, 63, 94, 0.2);
@@ -932,10 +894,10 @@ html, body {
 }
 
 .letter-paragraph {
-  font-size: 0.92rem;
-  line-height: 1.6;
+  font-size: 0.88rem;
+  line-height: 1.55;
   color: #ffe4e6;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .letter-paragraph.highlight-msg {
@@ -946,9 +908,9 @@ html, body {
 .letter-signature {
   text-align: right;
   font-family: var(--font-script);
-  font-size: 1.35rem;
+  font-size: 1.3rem;
   color: #fbcfe8;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 /* FINAL ACTIONS */
@@ -956,14 +918,14 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
-/* Floating particle created on tap */
+/* Floating heart burst on touch */
 .burst-heart {
   position: fixed;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   pointer-events: none;
   z-index: 999;
   animation: floatBurst 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
@@ -976,7 +938,7 @@ html, body {
   }
   100% {
     opacity: 0;
-    transform: translate(calc(-50% + var(--dx)), calc(-50% - 80px)) scale(1.4) rotate(var(--rot));
+    transform: translate(calc(-50% + var(--dx)), calc(-50% - 75px)) scale(1.35) rotate(var(--rot));
   }
 }
 
@@ -987,93 +949,112 @@ html, body {
   position: relative;
   z-index: 10;
   text-align: center;
-  padding: 10px 0 20px 0;
-  font-size: 0.78rem;
+  padding: 8px 0 calc(16px + env(safe-area-inset-bottom, 0px)) 0;
+  font-size: 0.74rem;
   color: rgba(253, 164, 175, 0.45);
-  letter-spacing: 0.5px;
 }
 
 /* =========================================================
-   RESPONSIVE OPTIMIZATIONS (Smartphones & Tablets)
+   RESPONSIVE DESIGN (SMARTPHONES < 480px)
    ========================================================= */
 @media (max-width: 480px) {
   .top-nav {
-    padding: 0 14px;
-    height: 52px;
+    height: calc(48px + env(safe-area-inset-top, 0px));
+    padding: env(safe-area-inset-top, 0px) 12px 0 12px;
   }
   
   .brand-tag {
-    font-size: 0.75rem;
+    font-size: 0.74rem;
   }
 
   .glass-pill-btn {
-    padding: 6px 12px;
-    font-size: 0.76rem;
+    padding: 5px 11px;
+    font-size: 0.72rem;
   }
 
   .app-viewport {
-    padding: 60px 12px 35px 12px;
+    padding: calc(52px + env(safe-area-inset-top, 0px)) 10px calc(16px + env(safe-area-inset-bottom, 0px)) 10px;
   }
 
   .card {
-    padding: 24px 16px;
-    border-radius: 22px;
+    padding: 20px 14px;
+    border-radius: 20px;
   }
 
   .photo-frame {
-    max-width: 240px;
-    padding: 10px 10px 20px 10px;
+    max-width: 210px;
+    padding: 8px 8px 16px 8px;
+    margin: 4px auto 14px auto;
   }
 
   .intro-text-group .main-title {
-    font-size: 1.3rem;
+    font-size: 1.24rem;
   }
 
   .subtitle {
-    font-size: 0.88rem;
+    font-size: 0.84rem;
+    margin-bottom: 16px;
+  }
+
+  .glow-primary-btn {
+    padding: 12px 26px;
+    font-size: 0.95rem;
+    min-height: 44px;
   }
 
   .step-title.candle-prompt {
-    font-size: 1.55rem;
+    font-size: 1.5rem;
   }
 
   .cake-interactive {
-    width: 250px;
-    height: 240px;
+    width: 220px;
+    height: 210px;
+    margin: 4px auto 16px auto;
   }
 
   .tier-top {
-    width: 145px;
-    height: 52px;
+    width: 130px;
+    height: 46px;
   }
 
   .tier-bottom {
-    width: 200px;
-    height: 65px;
+    width: 180px;
+    height: 58px;
   }
 
   .cake-plate {
-    width: 235px;
+    width: 215px;
+    height: 10px;
   }
 
   .instruction-text {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
   }
 
   .celebration-title {
-    font-size: 1.55rem;
+    font-size: 1.5rem;
   }
 
   .rose-stage {
-    max-width: 260px;
-    height: 280px;
+    max-width: 240px;
+    height: 240px;
+  }
+
+  .blooming-rose-svg {
+    max-height: 240px;
   }
 
   .love-letter-box {
-    padding: 16px;
+    padding: 14px;
+    margin: 8px 0 14px 0;
   }
 
   .letter-paragraph {
-    font-size: 0.86rem;
+    font-size: 0.84rem;
+  }
+
+  .final-actions button {
+    min-height: 44px;
+    padding: 10px 20px;
   }
 }
